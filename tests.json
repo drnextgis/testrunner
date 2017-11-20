@@ -1,0 +1,9 @@
+{
+    "python": null,
+    "items": [
+        "testrunner.dummy.testA",
+        "testrunner.dummy.testB",
+        "testrunner.dummy.testC",
+        "testrunner.dummy.testD"
+    ]
+}

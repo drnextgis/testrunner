@@ -1,0 +1,46 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/MaterialIcons-Regular.eot?#iefix) format("embedded-opentype"),
+       url(../fonts/MaterialIcons-Regular.woff) format("woff2"),
+       url(../fonts/MaterialIcons-Regular.woff) format("woff"),
+       url(../fonts/MaterialIcons-Regular.ttf) format("truetype")
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/roboto-regular.eot?#iefix) format("embedded-opentype"),
+       url(../fonts/roboto-regular.woff) format("woff2"),
+       url(../fonts/roboto-regular.woff) format("woff"),
+       url(../fonts/roboto-regular.ttf) format("truetype"),
+       url(../fonts/roboto-regular.svg#Roboto) format("svg")
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: url(../fonts/roboto-bold.eot?#iefix) format("embedded-opentype"),
+       url(../fonts/roboto-bold.woff) format("woff2"),
+       url(../fonts/roboto-bold.woff) format("woff"),
+       url(../fonts/roboto-bold.ttf) format("truetype"),
+       url(../fonts/roboto-bold.svg#Roboto) format("svg")
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}

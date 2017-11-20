@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Executor Requests</title>
+  <link href='./static/css/fonts.css' rel="stylesheet">
+  <link href="./static/contrib/vuetify/vuetify.min.css" rel="stylesheet">
+  <link href="./static/css/main.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <script>
+    var app_url = {{ falcon_request.url|tojson|safe }};
+  </script>
+</head>
+<body>
+  {% raw %}
+  <div id="app">
+    <v-app>
+      <v-content>
+        <v-container>
+            <header class="header">
+                <v-btn class="header__btn" color="primary"
+                       @click.native.stop = "$refs.recordForm.showForm()">Create</v-btn>      
+                <h1>Test Executor Requests</h1>
+            </header>
+            <data-table ref="dataTable"></data-table>
+        </v-container>
+      <v-content>
+    </v-app>
+    <record-form ref="recordForm"
+                 @form:submitted="onFormSubmitted()"
+                 @form:failed="onFormFailed($event)"></record-form>
+    <v-snackbar top
+      :timeout="snackbar.timeout"
+      :color="snackbar.color"
+      v-model="snackbar.visibility">
+      {{ snackbar.text }}
+      <v-btn dark flat @click.native="snackbar.visibility = false">Close</v-btn>
+    </v-snackbar>
+  </div>
+
+  <script id="tableTemplate" type="text/x-template">
+      <div>
+      <v-data-table
+              :headers="headers"
+              :items="items"
+              :search="search"
+              :pagination.sync="pagination"
+              :total-items="totalItems"
+              :loading="loading"
+              :rows-per-page-items="rowsPerPageItems"
+              class="requests-table elevation-1"
+              must-sort>
+        <template slot="items" slot-scope="props">
+          <tr :class="'row-' + props.item.state.toLowerCase()" @click="activeItem = props.index">
+              <td class="text-xs-right">{{ props.item.id }}</td>
+              <td>{{ props.item.requester }}</td>
+              <td>{{ props.item.created }}</td>
+              <td class="text-xs-right">{{ props.item.environment_id }}</td>
+              <td class="requests-table__files">{{ props.item.files }}</td>
+          </tr>
+        </template>
+      </v-data-table>
+      <detail-info ref="detailInfo" :item="items[activeItem]"
+                   @detailInfo:hidden="activeItem=undefined"></detail-info>
+    </div>
+  </script>
+ 
+  <script id="recordFormTemplate" type="text/x-template">
+    <v-dialog v-model="visible" persistent max-width="500px">
+      <v-card>
+        <v-card-title>
+          <h2>Create New Test Run</h2>
+          <v-icon class="dialog__closer"
+                  @click="hideForm()">close</v-icon>
+        </v-card-title>
+        <v-card-text>
+            <v-text-field label="Requester" required
+                          v-model="requester"></v-text-field>
+            <v-select
+              label="Test Environment Id"
+              required
+              :items="environmentIdItems"
+              v-model="environmentId"
+            ></v-select>
+            <v-select
+              label="Test Files"
+              multiple
+              :items="testItems"
+              v-model="files"
+            ></v-select>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click.native="hideForm()">Close</v-btn>
+          <v-btn color="primary" @click.native="submitForm()">Submit</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </script>
+
+  <script id="detailInfoTemplate" type="text/x-template">
+    <v-dialog v-model="visible" persistent scrollable max-width="680px">
+      <v-card class="pb-3" v-if="item">
+        <v-card-title>
+          <h2>Request #{{item.id}}</h2>
+          <v-chip :class="'detail-info__state ' + item.state.toLowerCase()" outline> {{ item.state.toLowerCase() }} </v-chip>
+          <v-icon class="dialog__closer"
+                  @click="hide()">close</v-icon>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <table class="vertical-table">
+            <tbody>
+              <tr>
+                <td>Request ID:</td>
+                <td>{{item.id}}</td>
+              </tr>
+              <tr>
+                <td>Requester:</td>
+                <td>{{item.requester}}</td>
+              </tr>
+              <tr>
+                <td>Created:</td>
+                <td>{{item.created}}</td>
+              </tr>
+              <tr>
+                <td>Test Environment ID:</td>
+                <td>{{item.environment_id}}</td>
+              </tr>
+              <tr>
+                <td>Files:</td>
+                <td>{{item.files}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <template v-if="item.output">
+            <h3 class="mb-1 mt-2">Logs</h3>
+            <code>{{item.output}}</code>
+          </template> 
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </script>
+
+  <script src="./static/contrib/vue/vue.js"></script>
+  <script src="./static/contrib/vuetify/vuetify.js"></script>
+  <script src="./static/contrib/axios/axios.min.js"></script>
+  <script src="./static/js/dataTable.js"></script>
+  <script src="./static/js/recordForm.js"></script>
+  <script src="./static/js/detailInfo.js"></script>
+  <script src="./static/js/app.js"></script>
+  {% endraw %}
+</body>
+</html>
