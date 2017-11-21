@@ -37,6 +37,10 @@ body{
 
 /* Detail info */
 
+.detail-info__title{
+    position: relative;
+}
+
 .detail-info__state{
     margin-left: 16px;
     position: relative;
@@ -56,6 +60,13 @@ body{
         height: 28px;
     }
 
+.detail-info__progress{
+    position: absolute;
+    bottom: -1px;
+    left:0;
+    right:0;
+}
+
 .vertical-table td{
     padding-left: 12px;
 }
@@ -72,4 +83,10 @@ body{
     right: 16px;
     top: 20px;
     cursor: pointer;
+}
+
+/* Code */
+code::after,
+code::before{
+    display: none;
 }

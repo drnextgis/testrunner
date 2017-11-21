@@ -24,17 +24,17 @@
             <data-table ref="dataTable"></data-table>
         </v-container>
       <v-content>
+      <record-form ref="recordForm"
+                   @form:submitted="onFormSubmitted()"
+                   @form:failed="onFormFailed($event)"></record-form>
+      <v-snackbar top
+        :timeout="snackbar.timeout"
+        :color="snackbar.color"
+        v-model="snackbar.visibility">
+        {{ snackbar.text }}
+        <v-btn dark flat @click.native="snackbar.visibility = false">Close</v-btn>
+      </v-snackbar>
     </v-app>
-    <record-form ref="recordForm"
-                 @form:submitted="onFormSubmitted()"
-                 @form:failed="onFormFailed($event)"></record-form>
-    <v-snackbar top
-      :timeout="snackbar.timeout"
-      :color="snackbar.color"
-      v-model="snackbar.visibility">
-      {{ snackbar.text }}
-      <v-btn dark flat @click.native="snackbar.visibility = false">Close</v-btn>
-    </v-snackbar>
   </div>
 
   <script id="tableTemplate" type="text/x-template">
@@ -83,6 +83,7 @@
             ></v-select>
             <v-select
               label="Test Files"
+              required
               multiple
               :items="testItems"
               v-model="files"
@@ -91,7 +92,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click.native="hideForm()">Close</v-btn>
-          <v-btn color="primary" @click.native="submitForm()">Submit</v-btn>
+          <v-btn color="primary" :disabled="!requester || !environmentId || !files.length"
+                 @click.native="submitForm()">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -100,11 +102,14 @@
   <script id="detailInfoTemplate" type="text/x-template">
     <v-dialog v-model="visible" persistent scrollable max-width="680px">
       <v-card class="pb-3" v-if="item">
-        <v-card-title>
+        <v-card-title class="detail-info__title">
           <h2>Request #{{item.id}}</h2>
           <v-chip :class="'detail-info__state ' + item.state.toLowerCase()" outline> {{ item.state.toLowerCase() }} </v-chip>
           <v-icon class="dialog__closer"
                   @click="hide()">close</v-icon>
+          <v-progress-linear v-if="item.state.toLowerCase() === 'pending'"
+                             class="detail-info__progress ma-0" height="1"
+                             v-bind:indeterminate="true"></v-progress-linear>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
@@ -134,7 +139,7 @@
           </table>
           <template v-if="item.output">
             <h3 class="mb-1 mt-2">Logs</h3>
-            <code>{{item.output}}</code>
+            <code class="pa-2">{{item.output}}</code>
           </template> 
         </v-card-text>
       </v-card>

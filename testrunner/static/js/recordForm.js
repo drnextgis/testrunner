@@ -47,11 +47,17 @@ Vue.component('recordForm', {
       })
         .then(response => {
             this.hideForm()
+            this.clearFormFields()
             this.$emit("form:submitted")
         })
         .catch(e => {
             this.$emit("form:failed", e.response.data.description)
         });
+    },
+    clearFormFields(){
+      this.requester = undefined
+      this.environmentId = undefined
+      this.files = []
     }
   }
 });
