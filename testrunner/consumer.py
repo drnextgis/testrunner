@@ -51,6 +51,16 @@ def run_test(request_id):
     request = DBSession.query(Request) \
         .filter_by(id=request_id).one()
 
+    # if environment is busy create task with the same
+    # args but 60 second delayed
+    if request.environment.busy:
+        run_test.schedule(args=(request_id,), delay=60)
+        return
+
+    # mark environment as busy
+    request.environment.busy = True
+    DBSession.commit()
+
     # tests here are "dotted names" that may resolve either to a module,
     # a test case class, a test method within a test case class,
     # a TestSuite instance, or a callable object which returns a

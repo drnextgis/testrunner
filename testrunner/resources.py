@@ -68,14 +68,5 @@ class RequestCollectionResource(CollectionResource):
             raise HTTPConflict('Conflict', 'Environment ID #%s not exist.' % (
                 request.environment_id))
 
-        if environment.busy:
-            db_session.rollback()
-            raise HTTPConflict('Conflict', 'Environment ID #%s is busy.' % (
-                request.environment_id))
-
-        # mark environment as busy
-        environment.busy = True
-        request.environment = environment
-
     def after_post(self, req, resp, request):
         run_test(request.id)
